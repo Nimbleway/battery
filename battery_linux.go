@@ -52,7 +52,8 @@ func readAmp(path, filename string, volts float64) (float64, error) {
 
 func isBattery(path string) bool {
 	t, err := ioutil.ReadFile(filepath.Join(path, "type"))
-	return err == nil && string(t) == "Battery\n"
+	_, voltageerr := os.Stat(filepath.Join(path, "voltage_now"))
+	return err == nil && string(t) == "Battery\n" && !os.IsNotExist(voltageerr)
 }
 
 func getBatteryFiles() ([]string, error) {
